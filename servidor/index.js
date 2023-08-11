@@ -25,7 +25,7 @@ app.use(
     secret: process.env.SECRET,
     algorithms: ["HS256"],
     getToken: req => req.cookies.token
-  }).unless({ path: ["/autenticar", "/logar", "/deslogar", "/"] })
+  }).unless({ path: ["/autenticar", "/logar", "/deslogar",] })
 );
 
 app.get('/autenticar', async function(req, res){
@@ -38,14 +38,25 @@ app.get('/', async function(req, res){
 
 app.post('/logar', (req, res) => {
   if(req.body.usuario == "nome" && req.body.senha == 123 ){
-    res.send("Voce esta logado")
-  } else{
-    res.send("Nome de usuario ou senha esta errado")
-  }
+    const id = 1;
+
+    const token = jwt.sign({ id }, process.env.SECRET, {
+      expiresIn: 300
+    })
+
+    res.cookie('token', token, {httpOnly: true});
+    return res.json({
+      usuario: req.body.usuario,
+      token: token
+    })
+  } 
+  res.status(500).json({ mensagem:"Login Invalido"})
 })
 
+
 app.post('/deslogar', function(req, res) {
-  
+  res.cookie('token', null, {httpOnly: true});
+  res.json({deslogado:true})
 })
 
 app.listen(3000, function() {
