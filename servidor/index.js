@@ -25,7 +25,7 @@ app.use(
     secret: process.env.SECRET,
     algorithms: ["HS256"],
     getToken: req => req.cookies.token
-  }).unless({ path: ["/autenticar", "/logar", "/deslogar", "/usuarios/cadastrar"] })
+  }).unless({ path: ["/autenticar", "/logar", "/deslogar", "/usuarios/cadastrar", ] })
 );
 
 app.get('/autenticar', async function(req, res){
@@ -59,15 +59,21 @@ app.post('/deslogar', function(req, res) {
   res.json({deslogado:true})
 })
 
-app.get('/usuarios/cadastrar', function(req, res) {
+app.get('/usuarios/cadastrar',  function(req, res) {
   res.render('cadastrar')
 })
 
-app.post('/usuarios/cadastrar', function(req, res) {
-  if (req.body.Senha == req.body.ConfirmarSenha && req.body.Usuario != "" ) {
-    res.json("Cadastro feito com sucesso")
-  } else {
-    res.json("Senha incorreta")
+app.get('/usuarios/listar',  function(req, res) {
+  res.render('listar')
+})
+
+app.post('/usuarios/cadastrar', async function(req, res) {
+  if (req.body.senha == req.body.ConfirmarSenha && req.body.usuario != "" ) {
+  await usuario.create(req.body)
+  
+  res.json("Cadastro feito com sucesso")
+ } else {
+    res.status(500).json("Senha incorreta")
   }
 })
 
