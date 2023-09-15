@@ -3,13 +3,11 @@ require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 var { expressjwt: expressJWT } = require("express-jwt");
 const cors = require('cors');
-
 var cookieParser = require('cookie-parser')
-
 const express = require('express');
 const { usuario } = require('./models');
-
 const app = express();
+const crypto = require('./crypto');
 
 app.set('view engine', 'ejs');
 
@@ -72,7 +70,10 @@ app.post('/usuarios/cadastrar', async function(req, res) {
   if (req.body.senha == req.body.ConfirmarSenha ) {
   await usuario.create(req.body)
   res.redirect("/usuarios/listar")
-
+  const encrypted_key = crypto.encrypt(req.body.senha)
+  console.log(encrypted_key)
+  const decrypt_key = crypto.decrypt(encrypted_key)
+  console.log(decrypt_key)
  } else {
     res.status(500).json("Senha incorreta")
   }
