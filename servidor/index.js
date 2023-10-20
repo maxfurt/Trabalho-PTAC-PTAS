@@ -35,7 +35,7 @@ app.get('/', async function(req, res){
 })
 
 app.post('/logar', (req, res) => {
-  if(req.body.usuario == "nome" && req.body.senha == 123 ){
+  if(req.body.usuario == "nome" && req.body.senha == 123  || req.body.usuario  && req.body.senha){
     const id = 1;
 
     const token = jwt.sign({ id }, process.env.SECRET, {
@@ -67,13 +67,13 @@ app.get('/usuarios/listar', async function(req, res) {
 })
 
 app.post('/usuarios/cadastrar', async function(req, res) {
+
   if (req.body.senha == req.body.ConfirmarSenha ) {
-  await usuario.create(req.body)
+    const dados = req.body
+    dados.senha = crypto.encrypt(dados.senha)
+
+  await usuario.create(dados)
   res.redirect("/usuarios/listar")
-  const encrypted_key = crypto.encrypt(req.body.senha)
-  console.log(encrypted_key)
-  const decrypt_key = crypto.decrypt(encrypted_key)
-  console.log(decrypt_key)
  } else {
     res.status(500).json("Senha incorreta")
   }
