@@ -1,4 +1,7 @@
 // JWT
+const crypto = require('./crypto');
+
+
 require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 var { expressjwt: expressJWT } = require("express-jwt");
@@ -7,7 +10,7 @@ var cookieParser = require('cookie-parser')
 const express = require('express');
 const { usuario } = require('./models');
 const app = express();
-const crypto = require('./crypto');
+
 
 app.set('view engine', 'ejs');
 
@@ -23,7 +26,7 @@ app.use(
     secret: process.env.SECRET,
     algorithms: ["HS256"],
     getToken: req => req.cookies.token
-  }).unless({ path: ["/autenticar", "/logar", "/deslogar", "/usuarios/cadastrar", "/usuarios/listar" ] })
+  }).unless({ path: ["/autenticar", "/logar", "/deslogar",  ] })
 );
 
 app.get('/autenticar', async function(req, res){
@@ -34,21 +37,22 @@ app.get('/', async function(req, res){
   res.render("home")
 })
 
-app.post('/logar', (req, res) => {
-  if(req.body.usuario == "nome" && req.body.senha == 123  || req.body.usuario  && req.body.senha){
-    const id = 1;
-
-    const token = jwt.sign({ id }, process.env.SECRET, {
-      expiresIn: 300
-    })
-
-    res.cookie('token', token, {httpOnly: true});
-    return res.json({
-      usuario: req.body.usuario,
-      token: token
-    })
-  } 
-  res.status(500).json({ mensagem:"Login Invalido"})
+app.post('/logar', async function (req, res) {
+  const semideia = await  usuario.findOne({ where: { usuario: req.body.usuario, senha:crypto.encrypt( req.body.senha) } });
+    
+      if(semideia){
+       const id = 1;
+       const token = jwt.sign({id}, process.env.SECRET, {
+        expiresIn:300
+       });
+       res.cookie('token', token, {httpOnly: true}); 
+       return res.json({
+        usuario: req.body.usuario,
+        token: token 
+       });
+      }
+      res.status(500).json({mensagem: "Nome ou senha incorreto"}); 
+    
 })
 
 
