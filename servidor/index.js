@@ -5,16 +5,27 @@ const crypto = require('./crypto');
 require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 var { expressjwt: expressJWT } = require("express-jwt");
+
+
 const cors = require('cors');
+const corsOpcoes ={
+  //Cliente que fara o acesso
+  origin: "http://localhost:3000",
+  //Metodos que o cliente pode executar
+  methods: "GET,PUT,POST,DELETE",
+  allowedHeaders: "Content-Type,Authorization",
+  credentials: true
+}
+
+
+
 var cookieParser = require('cookie-parser')
 const express = require('express');
 const { usuario } = require('./models');
 const app = express();
-
+app.use(cors(corsOpcoes));
 
 app.set('view engine', 'ejs');
-
-app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -45,13 +56,16 @@ app.post('/logar', async function (req, res) {
        const token = jwt.sign({id}, process.env.SECRET, {
         expiresIn:300
        });
-       res.cookie('token', token, {httpOnly: true}); 
-       return res.json({
-        usuario: req.body.usuario,
-        token: token 
-       });
+       res.cookie('token', token, {httpOnly: true}).json({
+        nome: semideia.usuario,
+        token: token
+       }); 
+//       return res.json({
+//       usuario: semideia.usuarios,
+//       token: token 
+//      });
       }
-      res.status(500).json({mensagem: "Nome ou senha incorreto"}); 
+     // res.status(500).json({mensagem: "Nome ou senha incorreto"}); 
     
 })
 
@@ -67,7 +81,7 @@ app.get('/usuarios/cadastrar',  function(req, res) {
 
 app.get('/usuarios/listar', async function(req, res) {
   let usuarios = await usuario.findAll()
-  res.render('listar', {usuarios})
+  res.json(usuarios)
 })
 
 app.post('/usuarios/cadastrar', async function(req, res) {
