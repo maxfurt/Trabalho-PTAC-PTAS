@@ -10,7 +10,6 @@ const validateToken = async(token)=>{
             
     }*/
         const isTokenValidate = await decode(token);
-
         if (isTokenValidate) {
             return true
             

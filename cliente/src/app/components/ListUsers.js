@@ -4,7 +4,7 @@ export default async function ListUser({users}) {
     return(
         <div>
             {users?.map((user, index)=>
-            <p key={index}>{user.nome}</p>
+            <p key={index}>{user.usuario}</p>
             )}
         </div>
             

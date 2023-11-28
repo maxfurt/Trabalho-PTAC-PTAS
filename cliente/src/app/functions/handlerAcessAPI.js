@@ -1,26 +1,28 @@
 'use server'
 
-const url = "https://aula-17-10-xi.vercel.app"
+const url = "http://localhost:3001"
 const getUserAuthenticated = async (user) =>{
-    
+
     const responseOfApi = await fetch(url + "/user/authenticated",
     {
         method:"POST",
-        headers:{"Content-Type":"Application/json"},
+        headers:{"Content-type":"Application/json"},
         body: JSON.stringify(user)
     });
-    console.log(user)
     const userAuth = await responseOfApi.json();
-    console.log(userAuth)
     return userAuth;
 }
 
 const getUsers = async() =>{
+
   try {
-        const responseOfApi = await fetch(url+ "/users", {
+        const responseOfApi = await fetch(url+ "/usuarios/listar", {
         cache:"no-cache",
+        headers:{
+            Cookie:`token=${token}`
+        }
         })
-        const users = await responseOfApi.json()
+        const users = await responseOfApi.json();
         return users
     } catch {
         return null

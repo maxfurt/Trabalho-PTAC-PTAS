@@ -97,6 +97,6 @@ app.post('/usuarios/cadastrar', async function(req, res) {
   }
 })
 
-app.listen(3000, function() {
+app.listen(3001, function() {
   console.log('App de Exemplo escutando na porta 3000!')
 });
