@@ -1,10 +1,12 @@
 'use server'
+import {cookies} from "next/headers"
 
 const url = "http://localhost:3001"
 const getUserAuthenticated = async (user) =>{
 
     const responseOfApi = await fetch(url + "/user/authenticated",
     {
+        cache:"no-cache",
         method:"POST",
         headers:{"Content-type":"Application/json"},
         body: JSON.stringify(user)
@@ -14,6 +16,7 @@ const getUserAuthenticated = async (user) =>{
 }
 
 const getUsers = async() =>{
+    const token = cookies().get('token')?.value;
 
   try {
         const responseOfApi = await fetch(url+ "/usuarios/listar", {
@@ -31,6 +34,7 @@ const getUsers = async() =>{
 
 
 const postUser = async(user) =>{
+    const token = cookies().get('token')?.value;
     try {
         const responseOfApi = await fetch(url+ "/user", {
         method:"POST",
