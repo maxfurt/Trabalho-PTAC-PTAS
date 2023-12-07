@@ -4,7 +4,7 @@ import {cookies} from "next/headers"
 const url = "http://localhost:3001"
 const getUserAuthenticated = async (user) =>{
 
-    const responseOfApi = await fetch(url + "/user/authenticated",
+    const responseOfApi = await fetch(url + "/logar",
     {
         cache:"no-cache",
         method:"POST",
