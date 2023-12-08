@@ -1,5 +1,4 @@
 'use client'
-import { postUser } from "@/app/functions/handlerAcessAPI";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {ToastContainer, toast} from "react-toastify"

@@ -17,8 +17,6 @@ const corsOpcoes ={
   credentials: true
 }
 
-
-
 var cookieParser = require('cookie-parser')
 const express = require('express');
 const { usuario } = require('./models');
