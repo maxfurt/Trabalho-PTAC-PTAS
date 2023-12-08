@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react";
+import handlerAcessUser from "@/app/functions/handlerAcess";
 import { useRouter } from "next/navigation";
 import {ToastContainer, toast} from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
@@ -8,9 +9,9 @@ import { postUser } from "@/app/functions/handlerAcessAPI";
 
 export default function Register() {
   const [user, setUser] = useState({
-    name: '',
-    email: '',
-    password: '',
+    usuario: '',
+    senha: '',
+    ConfirmarSenha: '',
   });
 
   const {push} =useRouter();
@@ -22,7 +23,7 @@ export default function Register() {
     try {
         await postUser(user)
         toast.error("Usuario Registrado Com Sucesso")
-        return push("/pages/dasboard")
+        return push("/pages/dashboard")
   }catch {
       refresh();
       toast.error("erro na aplicação")
@@ -58,19 +59,19 @@ export default function Register() {
           className={styles.input}
           placeholder='Nome'
           type="text"
-          onChange={(e) => { setUser({ ...user, text: e.target.value }) }}
-        />
-        <input
-          className={styles.input}
-          placeholder='E-mail'
-          type="email"
-          onChange={(e) => { setUser({ ...user, email: e.target.value }) }}
+          onChange={(e) => { setUser({ ...user, usuario: e.target.value }) }}
         />
         <input
           className={styles.input}
           placeholder='Senha'
-          type='password'
-          onChange={(e) => { setUser({ ...user, password: e.target.value }) }}
+          type="text"
+          onChange={(e) => { setUser({ ...user, senha: e.target.value }) }}
+        />
+        <input
+          className={styles.input}
+          placeholder='Confirmar Senha'
+          type='text'
+          onChange={(e) => { setUser({ ...user, ConfirmarSenha: e.target.value }) }}
         />
         <button className={styles.button}>Registrar</button>
       </form>

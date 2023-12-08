@@ -15,15 +15,17 @@ const getUserAuthenticated = async (user) =>{
     return userAuth;
 }
 
-const getUsers = async() =>{
+const getUsers = async (user) =>{
     const token = cookies().get('token')?.value;
 
   try {
         const responseOfApi = await fetch(url+ "/usuarios/listar", {
         cache:"no-cache",
         headers:{
+            'Content-Type':'Application/json',
             Cookie:`token=${token}`
-        }
+        },
+        body: JSON.stringify(user)
         })
         const users = await responseOfApi.json();
         return users
@@ -36,7 +38,7 @@ const getUsers = async() =>{
 const postUser = async(user) =>{
     const token = cookies().get('token')?.value;
     try {
-        const responseOfApi = await fetch(url+ "/user", {
+        const responseOfApi = await fetch(url+ "/usuarios/cadastrar", {
         method:"POST",
         headers: {'content-Type':'Application/json'},
         body: JSON.stringify(user)
